@@ -314,63 +314,6 @@ function Extension() {
           </View>
         )}
       </View>
-
-      {/* Applied Discounts Section */}
-      {discountCodes.length > 0 && (
-        <View
-          padding="base"
-          border="base"
-          borderRadius="base"
-          background="surface"
-        >
-          <BlockStack spacing="base">
-            <Text size="medium" emphasis="strong">
-              Active Discount:
-            </Text>
-            {discountCodes.map((discount) => (
-              <InlineLayout
-                key={discount.code}
-                spacing="base"
-                columns={["auto", "fill", "auto"]}
-                blockAlignment="center"
-              >
-                <Text size="small" appearance="success">
-                  ✓
-                </Text>
-                <BlockStack spacing="extraTight">
-                  <Text size="small" emphasis="strong" appearance="success">
-                    {discount.code}
-                  </Text>
-                  {availableCoupons.find((c) => c.code === discount.code)
-                    ?.description && (
-                    <Text size="extraSmall" appearance="subdued">
-                      {
-                        availableCoupons.find((c) => c.code === discount.code)
-                          .description
-                      }
-                    </Text>
-                  )}
-                </BlockStack>
-                <Button
-                  kind="plain"
-                  size="small"
-                  loading={loadingStates[`remove-${discount.code}`]}
-                  onPress={() => handleRemoveCoupon(discount.code)}
-                  accessibilityLabel={`Remove coupon ${discount.code}`}
-                >
-                  <Text
-                    size="small"
-                    appearance="critical"
-                    decoration="underline"
-                  >
-                    Remove
-                  </Text>
-                </Button>
-              </InlineLayout>
-            ))}
-          </BlockStack>
-        </View>
-      )}
     </BlockStack>
   );
 }
