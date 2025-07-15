@@ -13,6 +13,8 @@ import {
   useTranslate,
   Pressable,
   Divider,
+  Icon,
+  InlineSpacer,
 } from "@shopify/ui-extensions-react/checkout";
 
 // 1. Choose an extension target
@@ -204,7 +206,9 @@ function Extension() {
   // Gift box icon
   const GiftIcon = () => (
     <View>
-      <Text size="medium">🎁</Text>
+      <Text size="medium">
+        <Icon source="gift" />
+      </Text>
     </View>
   );
 
@@ -236,8 +240,13 @@ function Extension() {
             <Text size="medium" emphasis="strong">
               All coupons
             </Text>
+            {/* <InlineSpacer spacing="loose" /> */}
 
-            <ChevronIcon direction={isExpanded ? "up" : "down"} />
+            {isExpanded ? (
+              <Icon source="chevronDown" />
+            ) : (
+              <Icon source="chevronUp" />
+            )}
           </InlineLayout>
         </Pressable>
 
