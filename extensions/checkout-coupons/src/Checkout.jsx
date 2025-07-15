@@ -335,74 +335,76 @@ function Extension() {
 
         {/* Coupons List - Collapsible */}
         {isExpanded && (
-          <View>
-            <Divider />
-            <BlockStack spacing="none">
-              {couponsLoading ? (
-                <View padding="base">
-                  <Text size="medium" appearance="subdued">
-                    Loading coupons...
-                  </Text>
-                </View>
-              ) : availableCoupons.length === 0 ? (
-                <View padding="base">
-                  <Text size="medium" appearance="subdued">
-                    No coupons available at this time.
-                  </Text>
-                </View>
-              ) : (
-                availableCoupons.map((coupon, index) => {
-                  const isApplied = isCouponApplied(coupon.code);
-                  const isLoading = loadingStates[coupon.code];
+          <View padding="base" background="surface">
+            {/* <Divider /> */}
+            <View border="base" padding="none" background="surface">
+              <BlockStack spacing="none">
+                {couponsLoading ? (
+                  <View padding="base">
+                    <Text size="medium" appearance="subdued">
+                      Loading coupons...
+                    </Text>
+                  </View>
+                ) : availableCoupons.length === 0 ? (
+                  <View padding="base">
+                    <Text size="medium" appearance="subdued">
+                      No coupons available at this time.
+                    </Text>
+                  </View>
+                ) : (
+                  availableCoupons.map((coupon, index) => {
+                    const isApplied = isCouponApplied(coupon.code);
+                    const isLoading = loadingStates[coupon.code];
 
-                  return (
-                    <View key={coupon.code}>
-                      {index > 0 && <Divider />}
+                    return (
+                      <View key={coupon.code}>
+                        {index > 0 && <Divider />}
 
-                      <View padding="base">
-                        <InlineLayout
-                          columns={["fill", "auto"]}
-                          spacing="base"
-                          blockAlignment="center"
-                        >
-                          <BlockStack spacing="extraTight">
-                            <Text size="medium" emphasis="strong">
-                              {coupon.code}
-                            </Text>
-                            <Text size="small" appearance="subdued">
-                              {coupon.description}
-                            </Text>
-                          </BlockStack>
-
-                          <Button
-                            kind="plain"
-                            size="medium"
-                            loading={isLoading}
-                            disabled={
-                              isApplied ||
-                              Object.values(loadingStates).some(
-                                (state) => state
-                              )
-                            }
-                            onPress={() => handleApplyCoupon(coupon.code)}
-                            accessibilityLabel={`Apply coupon ${coupon.code}`}
+                        <View padding="base">
+                          <InlineLayout
+                            columns={["fill", "auto"]}
+                            spacing="base"
+                            blockAlignment="center"
                           >
-                            <Text
+                            <BlockStack spacing="extraTight">
+                              <Text size="medium" emphasis="strong">
+                                {coupon.code}
+                              </Text>
+                              <Text size="small" appearance="subdued">
+                                {coupon.description}
+                              </Text>
+                            </BlockStack>
+
+                            <Button
+                              kind="plain"
                               size="medium"
-                              emphasis="strong"
-                              appearance={isApplied ? "success" : "info"}
-                              decoration={isApplied ? "none" : "underline"}
+                              loading={isLoading}
+                              disabled={
+                                isApplied ||
+                                Object.values(loadingStates).some(
+                                  (state) => state
+                                )
+                              }
+                              onPress={() => handleApplyCoupon(coupon.code)}
+                              accessibilityLabel={`Apply coupon ${coupon.code}`}
                             >
-                              {isApplied ? "Applied ✓" : "Apply"}
-                            </Text>
-                          </Button>
-                        </InlineLayout>
+                              <Text
+                                size="medium"
+                                emphasis="strong"
+                                appearance={isApplied ? "success" : "info"}
+                                decoration={isApplied ? "none" : "underline"}
+                              >
+                                {isApplied ? "Applied ✓" : "Apply"}
+                              </Text>
+                            </Button>
+                          </InlineLayout>
+                        </View>
                       </View>
-                    </View>
-                  );
-                })
-              )}
-            </BlockStack>
+                    );
+                  })
+                )}
+              </BlockStack>
+            </View>
           </View>
         )}
       </View>
