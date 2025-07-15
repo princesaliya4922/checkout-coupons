@@ -224,31 +224,38 @@ function Extension() {
         background="surface"
       >
         {/* Header Section - Clickable */}
-        <Pressable
-          onPress={toggleExpanded}
-          border="none"
-          padding="base"
-          borderRadius="base"
+        <InlineLayout
+          spacing="base"
+          blockAlignment="center"
+          columns={["fill", "auto"]}
         >
-          <InlineLayout
-            columns={["auto", "fill", "auto"]}
-            spacing="base"
-            blockAlignment="center"
+          <Pressable
+            onPress={toggleExpanded}
+            border="none"
+            padding="base"
+            borderRadius="base"
           >
-            <GiftIcon />
+            <InlineLayout
+              columns={["auto", "fill", "auto"]}
+              spacing="base"
+              blockAlignment="center"
+            >
+              <GiftIcon />
 
-            <Text size="medium" emphasis="strong">
-              All coupons
-            </Text>
-            {/* <InlineSpacer spacing="loose" /> */}
-
+              <Text size="medium" emphasis="strong">
+                All coupons
+              </Text>
+              {/* <InlineSpacer spacing="loose" /> */}
+            </InlineLayout>
+          </Pressable>
+          <View padding="base">
             {isExpanded ? (
               <Icon source="chevronDown" />
             ) : (
               <Icon source="chevronUp" />
             )}
-          </InlineLayout>
-        </Pressable>
+          </View>
+        </InlineLayout>
 
         {/* Coupons List - Collapsible */}
         {isExpanded && (
