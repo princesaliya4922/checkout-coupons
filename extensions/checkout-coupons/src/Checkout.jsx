@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   reactExtension,
   Banner,
@@ -25,37 +25,105 @@ export default reactExtension(
 
 function Extension() {
   const translate = useTranslate();
-  const { extension } = useApi();
+  const { extension, query } = useApi();
   const applyDiscountCodeChange = useApplyDiscountCodeChange();
   const discountCodes = useDiscountCodes();
   const [loadingStates, setLoadingStates] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isExpanded, setIsExpanded] = useState(true);
+  const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [couponsLoading, setCouponsLoading] = useState(true);
 
-  // Define your coupon codes here - updated to match the image
-  const availableCoupons = [
+  // Fallback placeholder coupons
+  const fallbackCoupons = [
+    {
+      code: "SAVE20",
+      description: "Get 20% off on your order",
+      type: "percentage",
+    },
     {
       code: "FLAT400",
-      description: "Shop any 2 eligible products at ₹699",
-      type: "bundle",
+      description: "Flat ₹100 off on orders above ₹500",
+      type: "fixed",
     },
     {
-      code: "FLAT300",
-      description: "Shop any 3 eligible products at ₹999",
-      type: "bundle",
-    },
-    {
-      code: "BUY1199",
-      description: "Shop any 4 eligible products at ₹1199",
-      type: "bundle",
-    },
-    {
-      code: "FLAT20",
-      description: "Get flat 20% OFF on orders above ₹499",
+      code: "WELCOME10",
+      description: "Welcome offer - 10% off for new customers",
       type: "percentage",
     },
   ];
+
+  // Fetch coupons from metaobject
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        setCouponsLoading(true);
+
+        // GraphQL query to fetch metaobject entries
+        const queryString = `
+          query {
+            metaobjects(type: "coupon_codes", first: 20) {
+              edges {
+                node {
+                  id
+                  fields {
+                    key
+                    value
+                  }
+                }
+              }
+            }
+          }
+        `;
+
+        const response = await query(queryString);
+
+        if (response?.data?.metaobjects?.edges) {
+          const coupons = response.data.metaobjects.edges
+            .map(({ node }) => {
+              const fields = node.fields.reduce((acc, field) => {
+                acc[field.key] = field.value;
+                return acc;
+              }, {});
+
+              return {
+                code: fields.code || "",
+                description: fields.description || "",
+                type: fields.type || "general",
+                active: fields.active !== false, // Default to true if not specified
+              };
+            })
+            .filter((coupon) => coupon.active && coupon.code); // Only show active coupons with valid codes
+
+          // If we have coupons from metaobject, use them
+          if (coupons.length > 0) {
+            setAvailableCoupons(coupons);
+          } else {
+            // No coupons found in metaobject, use fallback
+            console.log(
+              "No coupons found in metaobject, using fallback coupons"
+            );
+            setAvailableCoupons(fallbackCoupons);
+          }
+        } else {
+          // Invalid response structure, use fallback
+          console.log("Invalid metaobject response, using fallback coupons");
+          setAvailableCoupons(fallbackCoupons);
+        }
+      } catch (error) {
+        console.error("Error fetching coupons:", error);
+        console.log("Failed to fetch from metaobject, using fallback coupons");
+
+        // On error, use fallback coupons
+        setAvailableCoupons(fallbackCoupons);
+      } finally {
+        setCouponsLoading(false);
+      }
+    };
+
+    fetchCoupons();
+  }, [query]);
 
   const handleApplyCoupon = async (couponCode) => {
     // Clear previous messages
@@ -212,6 +280,15 @@ function Extension() {
     </View>
   );
 
+  // Don't render if there are no coupons (both metaobject and fallback are empty)
+  if (!couponsLoading && availableCoupons.length === 0) {
+    return null;
+  }
+
+  if (availableCoupons.length === 0) {
+    return;
+  }
+
   return (
     <BlockStack spacing="base">
       {errorMessage && <Banner status="critical">{errorMessage}</Banner>}
@@ -245,14 +322,13 @@ function Extension() {
               <Text size="medium" emphasis="strong">
                 All coupons
               </Text>
-              {/* <InlineSpacer spacing="loose" /> */}
             </InlineLayout>
           </Pressable>
           <View padding="base">
             {isExpanded ? (
-              <Icon source="chevronDown" />
-            ) : (
               <Icon source="chevronUp" />
+            ) : (
+              <Icon source="chevronDown" />
             )}
           </View>
         </InlineLayout>
@@ -262,54 +338,70 @@ function Extension() {
           <View>
             <Divider />
             <BlockStack spacing="none">
-              {availableCoupons.map((coupon, index) => {
-                const isApplied = isCouponApplied(coupon.code);
-                const isLoading = loadingStates[coupon.code];
+              {couponsLoading ? (
+                <View padding="base">
+                  <Text size="medium" appearance="subdued">
+                    Loading coupons...
+                  </Text>
+                </View>
+              ) : availableCoupons.length === 0 ? (
+                <View padding="base">
+                  <Text size="medium" appearance="subdued">
+                    No coupons available at this time.
+                  </Text>
+                </View>
+              ) : (
+                availableCoupons.map((coupon, index) => {
+                  const isApplied = isCouponApplied(coupon.code);
+                  const isLoading = loadingStates[coupon.code];
 
-                return (
-                  <View key={coupon.code}>
-                    {index > 0 && <Divider />}
+                  return (
+                    <View key={coupon.code}>
+                      {index > 0 && <Divider />}
 
-                    <View padding="base">
-                      <InlineLayout
-                        columns={["fill", "auto"]}
-                        spacing="base"
-                        blockAlignment="center"
-                      >
-                        <BlockStack spacing="extraTight">
-                          <Text size="medium" emphasis="strong">
-                            {coupon.code}
-                          </Text>
-                          <Text size="small" appearance="subdued">
-                            {coupon.description}
-                          </Text>
-                        </BlockStack>
-
-                        <Button
-                          kind="plain"
-                          size="medium"
-                          loading={isLoading}
-                          disabled={
-                            isApplied ||
-                            Object.values(loadingStates).some((state) => state)
-                          }
-                          onPress={() => handleApplyCoupon(coupon.code)}
-                          accessibilityLabel={`Apply coupon ${coupon.code}`}
+                      <View padding="base">
+                        <InlineLayout
+                          columns={["fill", "auto"]}
+                          spacing="base"
+                          blockAlignment="center"
                         >
-                          <Text
+                          <BlockStack spacing="extraTight">
+                            <Text size="medium" emphasis="strong">
+                              {coupon.code}
+                            </Text>
+                            <Text size="small" appearance="subdued">
+                              {coupon.description}
+                            </Text>
+                          </BlockStack>
+
+                          <Button
+                            kind="plain"
                             size="medium"
-                            emphasis="strong"
-                            appearance={isApplied ? "success" : "info"}
-                            decoration={isApplied ? "none" : "underline"}
+                            loading={isLoading}
+                            disabled={
+                              isApplied ||
+                              Object.values(loadingStates).some(
+                                (state) => state
+                              )
+                            }
+                            onPress={() => handleApplyCoupon(coupon.code)}
+                            accessibilityLabel={`Apply coupon ${coupon.code}`}
                           >
-                            {isApplied ? "Applied ✓" : "Apply"}
-                          </Text>
-                        </Button>
-                      </InlineLayout>
+                            <Text
+                              size="medium"
+                              emphasis="strong"
+                              appearance={isApplied ? "success" : "info"}
+                              decoration={isApplied ? "none" : "underline"}
+                            >
+                              {isApplied ? "Applied ✓" : "Apply"}
+                            </Text>
+                          </Button>
+                        </InlineLayout>
+                      </View>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })
+              )}
             </BlockStack>
           </View>
         )}
