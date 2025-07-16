@@ -292,8 +292,7 @@ function Extension() {
 
   return (
     <BlockStack spacing="base">
-      {errorMessage && <Banner status="critical" size="base">{errorMessage}</Banner>}
-      {successMessage && <Banner status="success" size="base">{successMessage}</Banner>}
+      
 
       <View
         border="base"
@@ -410,6 +409,9 @@ function Extension() {
           </View>
         )}
       </View>
+      
+      {errorMessage && <Banner status="critical" size="base">{errorMessage}</Banner>}
+      {successMessage && <Banner status="success" size="base">{successMessage}</Banner>}
     </BlockStack>
   );
 }
