@@ -201,7 +201,7 @@ function Extension() {
         }
 
         setErrorMessage(
-          `Failed to apply coupon "${couponCode}". Please check if the code is valid or if your order meets the requirements.`
+          `"${couponCode}" discount code is not applicable on this order.`
         );
 
         // Clear error message after 5 seconds
