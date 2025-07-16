@@ -297,7 +297,7 @@ function Extension() {
       <View
         border="base"
         borderRadius="base"
-        padding="none"
+        padding="base"
         background="surface"
       >
         {/* Header Section - Clickable */}
@@ -309,7 +309,7 @@ function Extension() {
           <Pressable
             onPress={toggleExpanded}
             border="none"
-            padding="base"
+            padding="none"
             borderRadius="base"
           >
             <InlineLayout
@@ -324,7 +324,7 @@ function Extension() {
               </Text>
             </InlineLayout>
           </Pressable>
-          <View padding="base">
+          <View padding="none">
             {isExpanded ? (
               <Icon source="chevronUp" />
             ) : (
@@ -335,8 +335,9 @@ function Extension() {
 
         {/* Coupons List - Collapsible */}
         {isExpanded && (
-          <View padding="base" background="surface">
+          <View padding="none" background="surface">
             {/* <Divider /> */}
+            <InlineSpacer spacing="tight" />
             <View border="base" padding="none" background="surface">
               <BlockStack spacing="none">
                 {couponsLoading ? (
