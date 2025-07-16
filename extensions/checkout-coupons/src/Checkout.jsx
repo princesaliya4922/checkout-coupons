@@ -291,8 +291,8 @@ function Extension() {
 
   return (
     <BlockStack spacing="base">
-      {errorMessage && <Banner status="critical">{errorMessage}</Banner>}
-      {successMessage && <Banner status="success">{successMessage}</Banner>}
+      {errorMessage && <Banner status="critical" size="base">{errorMessage}</Banner>}
+      {successMessage && <Banner status="success" size="base">{successMessage}</Banner>}
 
       <View
         border="base"
@@ -319,7 +319,7 @@ function Extension() {
             >
               <GiftIcon />
 
-              <Text size="medium" emphasis="strong">
+              <Text size="base" emphasis="strong">
                 All coupons
               </Text>
             </InlineLayout>
@@ -342,13 +342,13 @@ function Extension() {
               <BlockStack spacing="none">
                 {couponsLoading ? (
                   <View padding="base">
-                    <Text size="medium" appearance="subdued">
+                    <Text size="base" appearance="subdued">
                       Loading coupons...
                     </Text>
                   </View>
                 ) : availableCoupons.length === 0 ? (
                   <View padding="base">
-                    <Text size="medium" appearance="subdued">
+                    <Text size="base" appearance="subdued">
                       No coupons available at this time.
                     </Text>
                   </View>
@@ -368,7 +368,7 @@ function Extension() {
                             blockAlignment="center"
                           >
                             <BlockStack spacing="extraTight">
-                              <Text size="medium" emphasis="strong">
+                              <Text size="base" emphasis="strong">
                                 {coupon.code}
                               </Text>
                               <Text size="small" appearance="subdued">
@@ -390,12 +390,12 @@ function Extension() {
                               accessibilityLabel={`Apply coupon ${coupon.code}`}
                             >
                               <Text
-                                size="medium"
+                                size="base"
                                 emphasis="strong"
                                 appearance={isApplied ? "success" : "info"}
                                 decoration={isApplied ? "none" : "underline"}
                               >
-                                {isApplied ? "Applied ✓" : "Apply"}
+                                {isApplied ? "Applied" : "Apply"}
                               </Text>
                             </Button>
                           </InlineLayout>
