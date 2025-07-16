@@ -324,13 +324,13 @@ function Extension() {
               </Text>
             </InlineLayout>
           </Pressable>
-          <View padding="none">
+          <Pressable padding="none" onPress={toggleExpanded}>
             {isExpanded ? (
               <Icon source="chevronUp" />
             ) : (
               <Icon source="chevronDown" />
             )}
-          </View>
+          </Pressable>
         </InlineLayout>
 
         {/* Coupons List - Collapsible */}
