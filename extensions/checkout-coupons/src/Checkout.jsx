@@ -15,6 +15,7 @@ import {
   Divider,
   Icon,
   InlineSpacer,
+  BlockSpacer,
 } from "@shopify/ui-extensions-react/checkout";
 
 // 1. Choose an extension target
@@ -337,7 +338,7 @@ function Extension() {
         {isExpanded && (
           <View padding="none" background="surface">
             {/* <Divider /> */}
-            <InlineSpacer spacing="tight" />
+            <BlockSpacer spacing="base" />
             <View border="base" padding="none" background="surface">
               <BlockStack spacing="none">
                 {couponsLoading ? (
@@ -367,7 +368,7 @@ function Extension() {
                             spacing="base"
                             blockAlignment="center"
                           >
-                            <BlockStack spacing="extraTight">
+                            <BlockStack spacing="extraSmall">
                               <Text size="base" emphasis="strong">
                                 {coupon.code}
                               </Text>
