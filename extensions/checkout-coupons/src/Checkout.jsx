@@ -338,7 +338,7 @@ function Extension() {
           <View padding="none" background="surface">
             {/* <Divider /> */}
             <BlockSpacer spacing="base" />
-            <View border="base" padding="none" background="surface">
+            <View border="none" padding="none" background="surface">
               <BlockStack spacing="none">
                 {couponsLoading ? (
                   <View padding="base">
@@ -358,14 +358,15 @@ function Extension() {
                     const isLoading = loadingStates[coupon.code];
 
                     return (
-                      <View key={coupon.code}>
-                        {index > 0 && <Divider />}
-
-                        <View padding="base">
+                      <>
+                      <View key={coupon.code} border="base" borderRadius="base">
+                        
+                        <View padding="tight">
                           <InlineLayout
                             columns={["fill", "auto"]}
                             spacing="base"
                             blockAlignment="center"
+                          
                           >
                             <BlockStack spacing="extraSmall">
                               <Text size="base" emphasis="strong">
@@ -401,6 +402,8 @@ function Extension() {
                           </InlineLayout>
                         </View>
                       </View>
+                      {index < availableCoupons.length - 1 && <BlockSpacer spacing="base" />}
+                      </>
                     );
                   })
                 )}
