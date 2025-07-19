@@ -20,7 +20,7 @@ import {
 
 // 1. Choose an extension target
 export default reactExtension(
-  "purchase.checkout.reductions.render-after",
+  "purchase.checkout.block.render[INFORMATION1]",
   () => <Extension />
 );
 
