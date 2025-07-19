@@ -19,10 +19,9 @@ import {
 } from "@shopify/ui-extensions-react/checkout";
 
 // 1. Choose an extension target
-export default reactExtension(
-  "purchase.checkout.block.render[INFORMATION1]",
-  () => <Extension />
-);
+export default reactExtension("purchase.checkout.block.render", () => (
+  <Extension />
+));
 
 function Extension() {
   const translate = useTranslate();
@@ -63,20 +62,20 @@ function Extension() {
 
         // GraphQL query to fetch metaobject entries
         const queryString = `
-          query {
-            metaobjects(type: "coupon_codes", first: 20) {
-              edges {
-                node {
-                  id
-                  fields {
-                    key
-                    value
+            query {
+              metaobjects(type: "coupon_codes", first: 20) {
+                edges {
+                  node {
+                    id
+                    fields {
+                      key
+                      value
+                    }
                   }
                 }
               }
             }
-          }
-        `;
+          `;
 
         const response = await query(queryString);
 
@@ -189,16 +188,16 @@ function Extension() {
         // }, 3000);
       } else {
         // If the new coupon fails, try to reapply the previous one if any
-        if (discountCodes.length > 0 && discountCodes[0].code) {
-          try {
-            await applyDiscountCodeChange({
-              type: "addDiscountCode",
-              code: discountCodes[0].code,
-            });
-          } catch (reapplyError) {
-            console.error("Error reapplying previous coupon:", reapplyError);
-          }
-        }
+        // if (discountCodes.length > 0 && discountCodes[0].code) {
+        //   try {
+        //     await applyDiscountCodeChange({
+        //       type: "addDiscountCode",
+        //       code: discountCodes[0].code,
+        //     });
+        //   } catch (reapplyError) {
+        //     console.error("Error reapplying previous coupon:", reapplyError);
+        //   }
+        // }
 
         setErrorMessage(
           `"${couponCode}" discount code is not applicable on this order.`
