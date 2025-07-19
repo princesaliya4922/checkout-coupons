@@ -182,12 +182,11 @@ function Extension() {
       console.log("Apply discount result:", result);
 
       if (result.type === "success") {
-        setSuccessMessage(`Coupon "${couponCode}" applied successfully!`);
-
+        // setSuccessMessage(`Coupon "${couponCode}" applied successfully!`);
         // Clear success message after 3 seconds
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3000);
+        // setTimeout(() => {
+        //   setSuccessMessage("");
+        // }, 3000);
       } else {
         // If the new coupon fails, try to reapply the previous one if any
         if (discountCodes.length > 0 && discountCodes[0].code) {
@@ -206,9 +205,9 @@ function Extension() {
         );
 
         // Clear error message after 5 seconds
-        setTimeout(() => {
-          setErrorMessage("");
-        }, 5000);
+        // setTimeout(() => {
+        //   setErrorMessage("");
+        // }, 5000);
       }
     } catch (error) {
       console.error("Error applying coupon:", error);
@@ -217,9 +216,9 @@ function Extension() {
       );
 
       // Clear error message after 5 seconds
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
+      // setTimeout(() => {
+      //   setErrorMessage("");
+      // }, 5000);
     } finally {
       // Remove loading state
       setLoadingStates((prev) => ({ ...prev, [couponCode]: false }));
@@ -236,17 +235,17 @@ function Extension() {
       });
 
       if (result.type === "success") {
-        setSuccessMessage(`Coupon "${couponCode}" removed successfully!`);
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 3000);
+        // setSuccessMessage(`Coupon "${couponCode}" removed successfully!`);
+        // setTimeout(() => {
+        //   setSuccessMessage("");
+        // }, 3000);
       }
     } catch (error) {
       console.error("Error removing coupon:", error);
       setErrorMessage(`Error removing coupon "${couponCode}".`);
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
+      // setTimeout(() => {
+      //   setErrorMessage("");
+      // }, 5000);
     } finally {
       setLoadingStates((prev) => ({
         ...prev,
@@ -292,8 +291,6 @@ function Extension() {
 
   return (
     <BlockStack spacing="base">
-      
-
       <View
         border="base"
         borderRadius="base"
@@ -359,50 +356,54 @@ function Extension() {
 
                     return (
                       <>
-                      <View key={coupon.code} border="base" borderRadius="base">
-                        
-                        <View padding="tight">
-                          <InlineLayout
-                            columns={["fill", "auto"]}
-                            spacing="base"
-                            blockAlignment="center"
-                          
-                          >
-                            <BlockStack spacing="extraSmall">
-                              <Text size="base" emphasis="strong">
-                                {coupon.code}
-                              </Text>
-                              <Text size="small" appearance="subdued">
-                                {coupon.description}
-                              </Text>
-                            </BlockStack>
-
-                            <Button
-                              kind="plain"
-                              size="medium"
-                              loading={isLoading}
-                              disabled={
-                                isApplied ||
-                                Object.values(loadingStates).some(
-                                  (state) => state
-                                )
-                              }
-                              onPress={() => handleApplyCoupon(coupon.code)}
-                              accessibilityLabel={`Apply coupon ${coupon.code}`}
+                        <View
+                          key={coupon.code}
+                          border="base"
+                          borderRadius="base"
+                        >
+                          <View padding="tight">
+                            <InlineLayout
+                              columns={["fill", "auto"]}
+                              spacing="base"
+                              blockAlignment="center"
                             >
-                              <Text
-                                size="base"
-                                emphasis="strong"
-                                appearance={isApplied ? "success" : "info"}
-                                decoration={isApplied ? "none" : "underline"}
+                              <BlockStack spacing="extraSmall">
+                                <Text size="base" emphasis="strong">
+                                  {coupon.code}
+                                </Text>
+                                <Text size="small" appearance="subdued">
+                                  {coupon.description}
+                                </Text>
+                              </BlockStack>
+
+                              <Button
+                                kind="plain"
+                                size="medium"
+                                loading={isLoading}
+                                disabled={
+                                  isApplied ||
+                                  Object.values(loadingStates).some(
+                                    (state) => state
+                                  )
+                                }
+                                onPress={() => handleApplyCoupon(coupon.code)}
+                                accessibilityLabel={`Apply coupon ${coupon.code}`}
                               >
-                                {isApplied ? "Applied" : "Apply"}
-                              </Text>
-                            </Button>
-                          </InlineLayout>
+                                <Text
+                                  size="base"
+                                  emphasis="strong"
+                                  appearance={isApplied ? "success" : "info"}
+                                  decoration={isApplied ? "none" : "underline"}
+                                >
+                                  {isApplied ? "Applied" : "Apply"}
+                                </Text>
+                              </Button>
+                            </InlineLayout>
+                          </View>
                         </View>
-                      </View>
-                      {index < availableCoupons.length - 1 && <BlockSpacer spacing="base" />}
+                        {index < availableCoupons.length - 1 && (
+                          <BlockSpacer spacing="base" />
+                        )}
                       </>
                     );
                   })
@@ -412,9 +413,17 @@ function Extension() {
           </View>
         )}
       </View>
-      
-      {errorMessage && <Banner status="critical" size="base">{errorMessage}</Banner>}
-      {successMessage && <Banner status="success" size="base">{successMessage}</Banner>}
+
+      {errorMessage && (
+        <Banner status="critical" size="base">
+          {errorMessage}
+        </Banner>
+      )}
+      {successMessage && (
+        <Banner status="success" size="base">
+          {successMessage}
+        </Banner>
+      )}
     </BlockStack>
   );
 }
